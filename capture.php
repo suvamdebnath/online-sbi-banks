@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "<div class='value'>$ip</div>";
         echo "</div>";
         echo "<p>In real phishing attack, this data goes to hacker's server.</p>";
-        echo "<p class='redirect'>🔜 Redirecting to YouTube in 3 seconds...</p>";
+        echo "<p class='redirect'>🔜 Redirecting to YouTube in 15 seconds...</p>";
         echo "</div>";
         echo "<meta http-equiv='refresh' content='3;url=https://www.youtube.com'>";
         echo "</body></html>";
