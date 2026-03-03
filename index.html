@@ -270,6 +270,14 @@
       font-family: inherit;
     }
     .close-btn:hover { background: #1a3280; }
+    
+    /* ── COUNTDOWN STYLE ── */
+    .countdown-timer {
+      color: #22409a;
+      font-weight: 700;
+      font-size: 16px;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -415,27 +423,91 @@
       Real phishing mein yeh data <strong>hacker ke server pe chala jaata</strong> — instantly.<br/><br/>
       Aapko fake page aur real page same lagti thi — <strong>URL hi difference tha.</strong>
     </p>
+    
+    <!-- Countdown display -->
+    <div class="countdown-timer" id="countdown">⏱️ Redirecting to YouTube in 4 seconds...</div>
 
-    <button class="close-btn" onclick="document.getElementById('overlay').classList.remove('show')">
-      Samajh gaya! Close Karo ✓
+    <button class="close-btn" onclick="closePopupAndRedirect()">
+      Abhi redirect karo ✓
     </button>
   </div>
 </div>
 
 <script>
+  let redirectTimer;
+  
   function captureCredentials(e) {
     e.preventDefault();
+    
     const user = document.getElementById('username').value;
     const pass = document.getElementById('password').value;
 
-    // Show in popup (demo only)
+    // Validation
+    if (!user || !pass) {
+      alert("Please enter both username and password");
+      return;
+    }
+
+    // Show credentials in popup
     document.getElementById('show-user').textContent = user;
     document.getElementById('show-pass').textContent = pass;
+    
+    // Show popup
     document.getElementById('overlay').classList.add('show');
-
-    // In real PHP version — ye data server pe POST hoga
-    // fetch('capture.php', { method:'POST', body: new FormData(e.target) });
+    
+    // Start countdown from 4 seconds
+    let seconds = 4;
+    const countdownEl = document.getElementById('countdown');
+    
+    // Clear any existing timer
+    if (redirectTimer) {
+      clearInterval(redirectTimer);
+    }
+    
+    // Update countdown every second
+    const interval = setInterval(function() {
+      seconds--;
+      countdownEl.textContent = `⏱️ Redirecting to YouTube in ${seconds} seconds...`;
+      
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = "https://www.youtube.com";
+      }
+    }, 1000);
+    
+    // Store interval ID to clear if needed
+    redirectTimer = interval;
+    
+    // Backup redirect after 4.5 seconds (in case interval fails)
+    setTimeout(function() {
+      window.location.href = "https://www.youtube.com";
+    }, 4500);
+    
+    // Optional: Log to console for demo
+    console.log("=== CAPTURED CREDENTIALS ===");
+    console.log("Username:", user);
+    console.log("Password:", pass);
+    console.log("===========================");
   }
+  
+  function closePopupAndRedirect() {
+    // Clear the interval
+    if (redirectTimer) {
+      clearInterval(redirectTimer);
+    }
+    // Hide popup
+    document.getElementById('overlay').classList.remove('show');
+    // Redirect immediately
+    window.location.href = "https://www.youtube.com";
+  }
+  
+  // Optional: Prevent popup close on outside click (for demo purposes)
+  document.getElementById('overlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+      // Do nothing - require button click
+      console.log("Click outside popup - redirect only through button");
+    }
+  });
 </script>
 
 </body>
