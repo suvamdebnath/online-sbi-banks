@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SBI | Online Banking Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP NAV ── */
+    .top-bar {
+      background: #22409a;
+      color: white;
+      font-size: 12px;
+      padding: 4px 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+    .top-bar a { color: #cde; text-decoration: none; }
+
+    .navbar {
+      background: white;
+      border-bottom: 3px solid #22409a;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .logo-area { display: flex; align-items: center; gap: 14px; }
+    .logo-circle {
+      width: 54px; height: 54px;
+      background: linear-gradient(135deg, #22409a, #1a3280);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 18px;
+      letter-spacing: -1px;
+    }
+    .logo-text { line-height: 1.2; }
+    .logo-text .bank-name { font-size: 20px; font-weight: 700; color: #22409a; }
+    .logo-text .tagline { font-size: 11px; color: #666; }
+
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a {
+      text-decoration: none; color: #333; font-size: 13px; font-weight: 500;
+      padding: 4px 0; border-bottom: 2px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { color: #22409a; border-color: #22409a; }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      display: flex;
+      gap: 0;
+      max-width: 1100px;
+      margin: 28px auto;
+      width: 100%;
+      padding: 0 16px;
+      align-items: flex-start;
+    }
+
+    /* ── LOGIN CARD ── */
+    .login-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      width: 380px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .card-header {
+      background: linear-gradient(135deg, #22409a 0%, #1a5276 100%);
+      padding: 20px 24px 16px;
+      color: white;
+    }
+    .card-header h2 { font-size: 17px; font-weight: 600; }
+    .card-header p { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+
+    .card-body { padding: 24px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: #333; margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%; padding: 10px 12px;
+      border: 1.5px solid #d0d7de;
+      border-radius: 5px; font-size: 14px;
+      font-family: inherit; color: #111;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: #22409a;
+      box-shadow: 0 0 0 3px rgba(34,64,154,0.12);
+    }
+
+    .captcha-box {
+      background: #f7f9fb;
+      border: 1.5px solid #d0d7de;
+      border-radius: 5px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .captcha-check { width: 20px; height: 20px; accent-color: #22409a; }
+    .captcha-label { font-size: 13px; color: #444; }
+    .captcha-logo { margin-left: auto; font-size: 10px; color: #aaa; text-align: center; line-height: 1.2; }
+
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #22409a, #1a5276);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .login-btn:hover { opacity: 0.92; }
+    .login-btn:active { transform: scale(0.99); }
+
+    .card-links {
+      display: flex; justify-content: space-between;
+      margin-top: 14px; font-size: 12px;
+    }
+    .card-links a { color: #22409a; text-decoration: none; }
+    .card-links a:hover { text-decoration: underline; }
+
+    .divider { border: none; border-top: 1px solid #eee; margin: 18px 0; }
+
+    .register-box {
+      background: #f0f4ff;
+      border-radius: 5px;
+      padding: 14px;
+      text-align: center;
+      font-size: 13px; color: #555;
+    }
+    .register-box a { color: #22409a; font-weight: 600; }
+
+    /* ── SECURITY BADGE ── */
+    .security-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: #f0fff4;
+      border: 1px solid #b7e4c7;
+      border-radius: 5px;
+      padding: 8px 12px;
+      margin-top: 14px;
+      font-size: 11px; color: #276749;
+    }
+    .security-badge .lock { font-size: 16px; }
+
+    /* ── INFO PANELS ── */
+    .info-section { flex: 1; padding-left: 28px; }
+
+    .notice-box {
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      font-size: 13px; color: #5d4037;
+    }
+    .notice-box strong { display: block; margin-bottom: 4px; color: #e65100; }
+
+    .feature-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-bottom: 18px;
+    }
+    .feature-card {
+      background: white; border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      text-align: center;
+    }
+    .feature-card .icon { font-size: 28px; margin-bottom: 8px; }
+    .feature-card h4 { font-size: 13px; color: #22409a; font-weight: 600; }
+    .feature-card p { font-size: 11px; color: #777; margin-top: 4px; }
+
+    .helpline {
+      background: #22409a;
+      color: white;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .helpline .phone { font-size: 32px; }
+    .helpline h4 { font-size: 14px; font-weight: 700; }
+    .helpline p { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #22409a;
+      color: rgba(255,255,255,0.75);
+      text-align: center;
+      padding: 14px;
+      font-size: 12px;
+      margin-top: auto;
+    }
+    footer a { color: #aac4ff; text-decoration: none; margin: 0 8px; }
+
+    /* ── SUCCESS POPUP ── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    .overlay.show { display: flex; }
+    .popup {
+      background: white;
+      border-radius: 12px;
+      padding: 36px 32px;
+      max-width: 400px; width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .popup .warning-icon { font-size: 56px; margin-bottom: 12px; }
+    .popup h2 { color: #d32f2f; font-size: 20px; margin-bottom: 10px; }
+    .popup .captured {
+      background: #fff3f3;
+      border: 1.5px solid #f5c6c6;
+      border-radius: 8px;
+      padding: 14px;
+      margin: 14px 0;
+      text-align: left;
+      font-size: 13px;
+    }
+    .popup .captured .field { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .popup .captured .value { color: #d32f2f; font-weight: 700; font-size: 15px; margin-top: 2px; margin-bottom: 10px; }
+    .popup p { font-size: 13px; color: #555; line-height: 1.6; }
+    .popup .edu-label {
+      display: inline-block;
+      background: #e8f5e9; color: #2e7d32;
+      font-size: 11px; font-weight: 700;
+      border-radius: 20px; padding: 4px 12px;
+      margin-bottom: 14px; letter-spacing: 0.5px;
+    }
+    .close-btn {
+      margin-top: 18px;
+      background: #22409a; color: white;
+      border: none; border-radius: 6px;
+      padding: 10px 28px; font-size: 14px;
+      font-weight: 600; cursor: pointer;
+      font-family: inherit;
+    }
+    .close-btn:hover { background: #1a3280; }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="#">Contact Us</a>
+  <a href="#">Locate Us</a>
+  <a href="#">Sitemap</a>
+  <a href="#">हिन्दी</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo-area">
+    <div class="logo-circle">SBI</div>
+    <div class="logo-text">
+      <div class="bank-name">State Bank of India</div>
+      <div class="tagline">The Banker to Every Indian</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#">Personal Banking</a>
+    <a href="#">Corporate Banking</a>
+    <a href="#">NRI Services</a>
+    <a href="#">About Us</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- LOGIN CARD -->
+  <div class="login-card">
+    <div class="card-header">
+      <h2>🔐 Internet Banking Login</h2>
+      <p>Secure access to your SBI account</p>
+    </div>
+    <div class="card-body">
+      <form id="loginForm" onsubmit="captureCredentials(event)">
+        <div class="form-group">
+          <label for="username">Username / Customer ID</label>
+          <input type="text" id="username" placeholder="Enter your username" autocomplete="off" required/>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required/>
+        </div>
+
+        <div class="captcha-box">
+          <input type="checkbox" class="captcha-check" id="captcha"/>
+          <label class="captcha-label" for="captcha">I'm not a robot</label>
+          <div class="captcha-logo">reCAPTCHA<br>Privacy · Terms</div>
+        </div>
+
+        <button type="submit" class="login-btn">LOGIN →</button>
+      </form>
+
+      <div class="card-links">
+        <a href="#">Forgot Username?</a>
+        <a href="#">Forgot Password?</a>
+        <a href="#">Unlock Account</a>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="register-box">
+        New user? <a href="#">Register for Online Banking</a>
+      </div>
+
+      <div class="security-badge">
+        <span class="lock">🔒</span>
+        <span>256-bit SSL Encrypted · Your data is secure</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO SECTION -->
+  <div class="info-section">
+    <div class="notice-box">
+      <strong>⚠️ Security Alert</strong>
+      SBI never asks for your PIN, Password, or OTP via SMS, email or phone. Beware of fraudsters!
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">💸</div>
+        <h4>Fund Transfer</h4>
+        <p>NEFT, RTGS, IMPS 24x7</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📱</div>
+        <h4>YONO App</h4>
+        <p>Banking + Lifestyle</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📄</div>
+        <h4>e-Statements</h4>
+        <p>Download instantly</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🏠</div>
+        <h4>Loan Services</h4>
+        <p>Home, Car, Personal</p>
+      </div>
+    </div>
+
+    <div class="helpline">
+      <div class="phone">📞</div>
+      <div>
+        <h4>24x7 Customer Care: 1800 11 2211</h4>
+        <p>Toll Free · Available anytime · Report fraud immediately</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#">Privacy Policy</a>
+  <a href="#">Terms of Use</a>
+  <a href="#">Security Tips</a>
+  <a href="#">Disclaimer</a>
+  <br/><br/>
+  © 2024 State Bank of India. All Rights Reserved.
+</footer>
+
+<!-- SUCCESS POPUP (Educational Demo) -->
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <div class="edu-label">🎓 EDUCATIONAL DEMO — CEH TRAINING</div>
+    <div class="warning-icon">⚠️</div>
+    <h2>Credentials Captured!</h2>
+
+    <div class="captured">
+      <div class="field">Username</div>
+      <div class="value" id="show-user">—</div>
+      <div class="field">Password</div>
+      <div class="value" id="show-pass">—</div>
+    </div>
+
+    <p>
+      Real phishing mein yeh data <strong>hacker ke server pe chala jaata</strong> — instantly.<br/><br/>
+      Aapko fake page aur real page same lagti thi — <strong>URL hi difference tha.</strong>
+    </p>
+
+    <button class="close-btn" onclick="document.getElementById('overlay').classList.remove('show')">
+      Samajh gaya! Close Karo ✓
+    </button>
+  </div>
+</div>
+
+<script>
+  function captureCredentials(e) {
+    e.preventDefault();
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+
+    // Show in popup (demo only)
+    document.getElementById('show-user').textContent = user;
+    document.getElementById('show-pass').textContent = pass;
+    document.getElementById('overlay').classList.add('show');
+
+    // In real PHP version — ye data server pe POST hoga
+    // fetch('capture.php', { method:'POST', body: new FormData(e.target) });
+  }
+</script>
+
+</body>
+</html>
